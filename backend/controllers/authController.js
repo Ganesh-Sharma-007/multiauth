@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const generateToken = require('../utils/generateToken');
 
 exports.register = async (req, res) => {
@@ -41,4 +41,16 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
     res.json(req.user);
+}
+
+
+
+
+exports.logout = async (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+    });
+    res.status(200).json({ message: 'Logged Out Successfully' })
 }
