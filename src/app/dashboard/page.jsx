@@ -25,7 +25,6 @@ export default function DashboardPage() {
     const res = await logoutUser();
     if (res.status === 200) {
       router.push('/login');
-      console.log("User logged out successfully");
     } else {
       alert('Logout failed');
     }
@@ -34,44 +33,50 @@ export default function DashboardPage() {
   const toggleEdit = () => setIsEditing(!isEditing);
   const handleChange = (e) => setData(e.target.value);
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <p className="dashboard-loading">Loading...</p>;
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <button onClick={handleLogout} style={{ padding: '8px 16px' }}>
-        Logout
-      </button>
-      <h1>Welcome, {user.name}</h1>
-      <p>Role: {user.role}</p>
+    <div className="dashboard-page">
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h1>Welcome, <span>{user.name}</span></h1>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        </div>
 
-      {user.role === 'admin' ? (
-        <div style={{ marginTop: '2rem' }}>
-          <h3>Edit Controls (Admin)</h3>
-          {isEditing ? (
+        <div className="dashboard-info">
+          <p><strong>Role:</strong> {user.role}</p>
+        </div>
+
+        <div className="dashboard-content">
+          {user.role === 'admin' ? (
             <div>
-              <textarea
-                value={data}
-                onChange={handleChange}
-                rows={4}
-                cols={50}
-              />
-              <br />
-              <button onClick={toggleEdit}>Save</button>
+              <h3>Edit Controls (Admin)</h3>
+              {isEditing ? (
+                <>
+                  <textarea
+                    className="dashboard-textarea"
+                    value={data}
+                    onChange={handleChange}
+                    rows={5}
+                  />
+                  <button className="action-btn" onClick={toggleEdit}>Save</button>
+                </>
+              ) : (
+                <>
+                  <p className="editable-content">{data}</p>
+                  <button className="action-btn" onClick={toggleEdit}>Edit Data</button>
+                </>
+              )}
             </div>
           ) : (
             <div>
-              <p>{data}</p>
-              <button onClick={toggleEdit}>Edit Data</button>
+              <h3>View Only</h3>
+              <p className="editable-content">{data}</p>
+              <p className="note">You can view the data but cannot edit.</p>
             </div>
           )}
         </div>
-      ) : (
-        <div style={{ marginTop: '2rem' }}>
-          <h3>View Only</h3>
-          <p>{data}</p>
-          <p>You can view the data but cannot edit.</p>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

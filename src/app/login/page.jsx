@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { loginUser } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'
 
 export default function LoginPage() {
   const router = useRouter();
@@ -9,11 +10,9 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("form login ===> ", form);
     try {
       const res = await loginUser(form);
       if (res.status === 200) {
-        console.log("user successfully login");
         router.push('/dashboard');
       } else {
         alert('Login failed');
@@ -24,23 +23,29 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-        required
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div className="login-page">
+      <form className="glass-form" onSubmit={handleSubmit}>
+        <h2 className="form-title">Welcome Back</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          required
+          className="form-input"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          required
+          className="form-input"
+        />
+        <button type="submit" className="form-button">Login</button>
+        <div> Create an account? <Link href="/register">Register</Link> </div>
+
+      </form>
+    </div>
   );
 }
