@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { fetchMe, logoutUser } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import NavBar from '../components/NavBar';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function DashboardPage() {
         const me = await fetchMe();
         setUser(me);
       } catch (err) {
-        router.push('/login');
+        router.push('/');
       }
     };
     loadUser();
@@ -24,7 +25,7 @@ export default function DashboardPage() {
   const handleLogout = async () => {
     const res = await logoutUser();
     if (res.status === 200) {
-      router.push('/login');
+      router.push('/');
     } else {
       alert('Logout failed');
     }
@@ -36,6 +37,8 @@ export default function DashboardPage() {
   if (!user) return <p className="dashboard-loading">Loading...</p>;
 
   return (
+    <>
+    <NavBar />
     <div className="dashboard-page">
       <div className="dashboard-container">
         <div className="dashboard-header">
@@ -78,5 +81,6 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

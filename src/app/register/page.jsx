@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { registerUser } from '@/lib/auth';
+import { useEffect, useState } from 'react';
+import { fetchMe, registerUser } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 
@@ -8,11 +8,28 @@ export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
 
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const me = await fetchMe();
+        if (me) {
+          router.push('/dashboard');
+        }
+      }
+      catch (err) {
+        console.log("dashboard redirect", err);
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await registerUser(form);
-      router.push('/login');
+      router.push('/');
     } catch (err) {
       alert('Registration failed');
     }
@@ -44,10 +61,10 @@ export default function RegisterPage() {
           className="form-input"
         />
         <button type="submit" className="form-button">Register</button>
-        
-        <div> Already have an account? <Link href="/login">Login</Link>
-        
-      </div>
+
+        <div> Already have an account? <Link href="/">Login</Link>
+
+        </div>
       </form>
 
     </div>
